@@ -25,12 +25,12 @@ export class UsersController {
   }
 
   @Get()
-  findAll(): User[] {
+  findAll(): Promise<User[]> {
     return this.usersService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): User {
+  findOne(@Param('id') id: string): Promise<User> {
     return this.usersService.findOne(id);
   }
 
@@ -44,7 +44,7 @@ export class UsersController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id') id: string): void {
+  remove(@Param('id') id: string): Promise<void> {
     return this.usersService.remove(id);
   }
 }

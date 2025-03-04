@@ -12,8 +12,13 @@ post {
 
 body:json {
   {
-    "email": "oleg@gmail.com",
-    "username": "oleg",
+    "email": "nie-oleg@gmail.com",
+    "username": "nie-oleg",
     "password": "not-oleg"
   }
+}
+
+script:post-response {
+  if (res.body?.[0]?.id) 
+    bru.setEnvVar("firstUserId", res.body[0].id)
 }

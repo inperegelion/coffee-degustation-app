@@ -11,5 +11,6 @@ get {
 }
 
 script:post-response {
-  bru.setEnvVar("firstUserId", res.body[0].id);
+  if (res.body?.[0]?.id) 
+    bru.setEnvVar("firstUserId", res.body[0].id)
 }

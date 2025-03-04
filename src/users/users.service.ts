@@ -1,33 +1,31 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/sequelize';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './interfaces/user.interface';
-import { v4 as uuidv4 } from 'uuid';
+import { User } from './models/user.model';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
-  private users: User[] = [];
+  constructor(
+    @InjectModel(User)
+    private userModel: typeof User,
+  ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
-    const user: User = {
-      id: uuidv4(),
+    return this.userModel.create({
       ...createUserDto,
       password: hashedPassword,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-    this.users.push(user);
-    return user;
+    });
   }
 
-  findAll(): User[] {
-    return this.users;
+  async findAll(): Promise<User[]> {
+    return this.userModel.findAll();
   }
 
-  findOne(id: string): User {
-    const user = this.users.find((user) => user.id === id);
+  async findOne(id: string): Promise<User> {
+    const user = await this.userModel.findByPk(id);
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
@@ -35,35 +33,24 @@ export class UsersService {
   }
 
   async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
-    const userIndex = this.users.findIndex((user) => user.id === id);
-    if (userIndex === -1) {
-      throw new NotFoundException(`User with ID ${id} not found`);
-    }
-
-    const user = this.users[userIndex];
-    const updatedUser = { ...user };
+    const user = await this.findOne(id);
 
     if (updateUserDto.email) {
-      updatedUser.email = updateUserDto.email;
+      user.email = updateUserDto.email;
     }
     if (updateUserDto.username) {
-      updatedUser.username = updateUserDto.username;
+      user.username = updateUserDto.username;
     }
     if (updateUserDto.password) {
-      updatedUser.password = await bcrypt.hash(updateUserDto.password, 10);
+      user.password = await bcrypt.hash(updateUserDto.password, 10);
     }
 
-    updatedUser.updatedAt = new Date();
-    this.users[userIndex] = updatedUser;
-
-    return updatedUser;
+    await user.save();
+    return user;
   }
 
-  remove(id: string): void {
-    const userIndex = this.users.findIndex((user) => user.id === id);
-    if (userIndex === -1) {
-      throw new NotFoundException(`User with ID ${id} not found`);
-    }
-    this.users.splice(userIndex, 1);
+  async remove(id: string): Promise<void> {
+    const user = await this.findOne(id);
+    await user.destroy();
   }
 }
