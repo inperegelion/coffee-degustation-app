@@ -1,0 +1,11 @@
+meta {
+  name: get by id
+  type: http
+  seq: 3
+}
+
+get {
+  url: http://localhost:3000/users/{{firstUserId}}
+  body: json
+  auth: none
+}

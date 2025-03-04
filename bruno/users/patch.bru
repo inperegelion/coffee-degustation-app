@@ -1,0 +1,19 @@
+meta {
+  name: patch
+  type: http
+  seq: 4
+}
+
+patch {
+  url: http://localhost:3000/users/{{firstUserId}}
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "oleg@gmail.com",
+    "username": "oleg",
+    "password": "not-oleg-change"
+  }
+}

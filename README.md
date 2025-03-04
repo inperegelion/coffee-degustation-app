@@ -97,3 +97,62 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
+# Coffee Degustation App
+
+A NestJS application for coffee tasting and rating.
+
+## Prerequisites
+
+- Docker and Docker Compose
+- Node.js (for local development)
+
+## Environment Setup
+
+1. Create a `.env.development` file in the root directory with the following content:
+
+```env
+DB_HOST=postgres
+DB_PORT=5432
+DB_USERNAME=coffeeapp
+DB_PASSWORD=localpassword
+DB_NAME=coffeeapp
+NODE_ENV=development
+```
+
+## Running with Docker
+
+1. Build and start the containers:
+```bash
+docker-compose up --build
+```
+
+2. To stop the containers:
+```bash
+docker-compose down
+```
+
+3. To view logs:
+```bash
+docker-compose logs -f
+```
+
+## Local Development
+
+1. Install dependencies:
+```bash
+npm install
+```
+
+2. Start the development server:
+```bash
+npm run start:dev
+```
+
+## Database
+
+The application uses PostgreSQL as the main database. The database will be automatically created when the containers start up.
+
+## Redis
+
+Redis is used for caching and session management. It's automatically configured when running with Docker Compose.
