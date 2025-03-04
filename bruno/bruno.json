@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "coffee-degustation-app",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}
