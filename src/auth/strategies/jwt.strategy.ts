@@ -3,6 +3,18 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
 
+interface JwtPayload {
+  sub: string;
+  username: string;
+  iat?: number;
+  exp?: number;
+}
+
+export interface JwtUser {
+  userId: string;
+  username: string;
+}
+
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(private configService: ConfigService) {
@@ -17,8 +29,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  // TODO: Add type safety
-  validate(payload: any) {
+  validate(payload: JwtPayload): JwtUser {
     if (!payload.sub || !payload.username) {
       throw new UnauthorizedException('Invalid token payload');
     }

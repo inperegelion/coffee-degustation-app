@@ -23,7 +23,7 @@ export class UsersService {
     email: string;
   }): Promise<User> {
     try {
-      return this.userModel.create(createUserDto);
+      return await this.userModel.create(createUserDto);
     } catch (error) {
       if (error instanceof UniqueConstraintError) {
         const field = error.errors[0].path;
