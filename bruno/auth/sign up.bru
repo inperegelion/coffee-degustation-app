@@ -1,0 +1,24 @@
+meta {
+  name: sign up
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:3000/auth/signup
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "username": "oleglesslegolegolassongrass",
+    "password": "oleglesslegolegolassongrass",
+    "email": "oleglesslegolegolassongrass@gmail.com"
+  }
+}
+
+script:post-response {
+  if (res.body?.access_token) 
+    bru.setEnvVar("jwtAccessToken", res.body.access_token)
+}

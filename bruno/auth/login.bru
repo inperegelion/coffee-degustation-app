@@ -1,0 +1,23 @@
+meta {
+  name: login
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:3000/auth/login
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "username": "oleglesslegolegolassongrass",
+    "password": "oleglesslegolegolassongrass"
+  }
+}
+
+script:post-response {
+  if (res.body?.access_token) 
+    bru.setEnvVar("jwtAccessToken", res.body.access_token)
+}

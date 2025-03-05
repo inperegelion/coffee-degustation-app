@@ -7,7 +7,6 @@ import { InjectModel } from '@nestjs/sequelize';
 import { UniqueConstraintError } from 'sequelize';
 import * as bcrypt from 'bcrypt';
 
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './models/user.model';
 
@@ -18,13 +17,13 @@ export class UsersService {
     private userModel: typeof User,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  async create(createUserDto: {
+    username: string;
+    password: string;
+    email: string;
+  }): Promise<User> {
     try {
-      const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
-      return await this.userModel.create({
-        ...createUserDto,
-        password: hashedPassword,
-      });
+      return this.userModel.create(createUserDto);
     } catch (error) {
       if (error instanceof UniqueConstraintError) {
         const field = error.errors[0].path;
@@ -42,6 +41,10 @@ export class UsersService {
     const user = await this.userModel.findByPk(id);
     if (!user) throw new NotFoundException(`User with ID ${id} not found`);
     return user;
+  }
+
+  async findByUsername(username: string): Promise<User | null> {
+    return this.userModel.findOne({ where: { username } });
   }
 
   async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {

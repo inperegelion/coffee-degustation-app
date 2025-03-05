@@ -7,13 +7,13 @@ meta {
 patch {
   url: http://localhost:3000/users/{{firstUserId}}
   body: json
-  auth: none
+  auth: inherit
 }
 
 body:json {
   {
     "email": "oleg@gmail.com",
     "username": "oleg",
-    "password": "not-oleg-change"
+    "password": "not-oleg-changed"
   }
 }
